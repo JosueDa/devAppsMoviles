@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Aplicaciones Moviles</string>
+    <string name="logInTitle">Log In</string>
+    <string name="emailHint">Correo</string>
+    <string name="passwordHint">Contraseña</string>
+    <string name="logInBtnText">Ingresar</string>
+    <string name="registerText">Registrarme</string>
+    <string name="forgotPassword">Olvide mi contraseña?</string>
+    <string name="registerBtnText">Registrarme</string>
+    <string name="registerMessage">Bienvenido!</string>
+    <string name="lastNameHint">Apellido</string>
+    <string name="countryHint">País</string>
+    <string name="phoneHint">Número de teléfono</string>
+    <string name="nameHint">Nombre</string>
+    <string name="lugares_turisticos_menu">Lugares Turísticos</string>
+    <string name="restaurantes_menu">Restaurantes</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="log_out_menu">Log Out</string>
+    <string name="home_menu">Home</string>
+    <string name="image_place_description">Image Place</string>
+    <string name="filterBtnText">Filtrar</string>
+    <string name="first_filter">Z-A</string>
+    <string name="second_filter">Z-A</string>
+    <string name="a_z_filter">A-Z</string>
+    <string name="departamento_a_z_filter">Departamento A-Z</string>
+    <string name="departamento_z_a_filter">Departamento Z-A</string>
+    <string name="popularidad_desc">Popularidad DESC</string>
+    <string name="popularidad_asce">Popularidad ASCE</string>
+    <string name="z_a_filter">Z-A</string>
+</resources>

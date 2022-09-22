@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.PlacesFragment"
+    android:id="@+id/placeFragment"
+    >
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/places_search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toTopOf="@id/placesList"
+        />
+
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/placesList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="60dp"
+        app:layout_constraintTop_toBottomOf="@id/places_search_bar"
+        />
+
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/filterBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="15dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:theme="@style/Widget.Design.FloatingActionButton"
+        app:icon="@drawable/ic_baseline_filter_alt_24"
+        />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/ZAFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/filterBtn"
+        app:layout_constraintEnd_toStartOf="@id/filterBtn"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="5dp"
+        android:gravity="center"
+        android:text="@string/z_a_filter"
+         />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/AZFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/ZAFilter"
+        app:layout_constraintEnd_toEndOf="@id/ZAFilter"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:text="@string/a_z_filter"
+        />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/cityAZFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/AZFilter"
+        app:layout_constraintEnd_toEndOf="@id/AZFilter"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:text="@string/departamento_a_z_filter"
+        />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/cityZAFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/cityAZFilter"
+        app:layout_constraintEnd_toEndOf="@id/AZFilter"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:text="@string/departamento_z_a_filter"
+        />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/rateDESCFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/cityZAFilter"
+        app:layout_constraintEnd_toEndOf="@id/AZFilter"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:text="@string/popularidad_desc"
+        />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/rateASCFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/rateDESCFilter"
+        app:layout_constraintEnd_toEndOf="@id/AZFilter"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:text="@string/popularidad_asce"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
