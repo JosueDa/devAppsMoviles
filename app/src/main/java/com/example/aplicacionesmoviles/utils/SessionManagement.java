@@ -19,6 +19,9 @@ public class SessionManagement {
     public void saveSession(User user){
         String email=user.email;
         editor.putString(session_key,email);
+        int id=user.id;
+        editor.putInt("id",id);
+        editor.commit();
     }
 
     public String getSession(){

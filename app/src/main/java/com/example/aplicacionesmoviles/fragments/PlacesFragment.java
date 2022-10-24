@@ -1,7 +1,11 @@
 package com.example.aplicacionesmoviles.fragments;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,20 +15,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.appcompat.widget.SearchView;
 
-import android.widget.Button;
-import android.widget.RatingBar;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.aplicacionesmoviles.PlaceDescription;
 import com.example.aplicacionesmoviles.R;
 import com.example.aplicacionesmoviles.adapter.PlaceAdapter;
 import com.example.aplicacionesmoviles.api.ApiClient;
 import com.example.aplicacionesmoviles.api.PlacesApi;
+import com.example.aplicacionesmoviles.api.ScoreApi;
 import com.example.aplicacionesmoviles.model.Place;
+import com.example.aplicacionesmoviles.model.Score;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,20 +48,24 @@ public class PlacesFragment extends Fragment implements SearchView.OnQueryTextLi
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    boolean fav=false;
 
     RecyclerView placesRecyclerView;
     PlacesApi placesApi;
     SearchView searchPlace;
-    PlaceAdapter placesAdapter= new PlaceAdapter( new ArrayList<>());
-    ExtendedFloatingActionButton filterButton, cityAZFilter,cityZAFilter, rateDESCFilter,rateASCFilter,filterAZ,filterZA;
+    PlaceAdapter placesAdapter;
+    ExtendedFloatingActionButton filterButton, cityAZFilter,cityZAFilter, rateDESCFilter,rateASCFilter,filterAZ,filterZA,dateDESCFilter,dateASCFilter;
     Boolean filtersVisible;
-    RatingBar ratingBar;
+    int userId;
+    private ScoreApi scoreApi;
+    private Score score=new Score();
 
     public PlacesFragment() {
         // Required empty public constructor
+    }
+
+    public PlacesFragment(boolean fav) {
+        this.fav=fav;
     }
 
     /**
@@ -79,124 +89,71 @@ public class PlacesFragment extends Fragment implements SearchView.OnQueryTextLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        // TODO: Rename and change types of parameters
+    }
+
+    @Override
+    public void onResume() {
+        placesAdapter.getFavorites(userId);
+        placesAdapter.getVisits(userId);
+        visibilityGone();
+
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        SharedPreferences sharedPreferences= this.requireContext().getSharedPreferences("session", Context.MODE_PRIVATE);
+        userId = sharedPreferences.getInt("id",-1);
+
         placesApi= ApiClient.getInstanceRetrofit().create(PlacesApi.class);
 
         View placesView = inflater.inflate(R.layout.fragment_places, container, false);
         placesRecyclerView=placesView.findViewById(R.id.placesList);
+        placesAdapter= new PlaceAdapter( new ArrayList<>(),userId);
         placesRecyclerView.setAdapter(placesAdapter);
         placesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        searchPlace= placesView.findViewById(R.id.places_search_bar);
-        filterButton= placesView.findViewById(R.id.filterBtn);
-        filterAZ= placesView.findViewById(R.id.AZFilter);
-        filterZA= placesView.findViewById(R.id.ZAFilter);
-        cityAZFilter= placesView.findViewById(R.id.cityAZFilter);
-        cityZAFilter= placesView.findViewById(R.id.cityZAFilter);
-        rateASCFilter= placesView.findViewById(R.id.rateASCFilter);
-        rateDESCFilter= placesView.findViewById(R.id.rateDESCFilter);
+        instanceButtons(placesView);
+        visibilityGone();
 
-        filterAZ.setVisibility(View.GONE);
-        filterZA.setVisibility(View.GONE);
-        cityAZFilter.setVisibility(View.GONE);
-        cityZAFilter.setVisibility(View.GONE);
-        rateASCFilter.setVisibility(View.GONE);
-        rateDESCFilter.setVisibility(View.GONE);
+        Call<List<Place>> placeCall;
+        if (fav) placeCall=placesApi.getFavPlacesById(userId);
+        else placeCall=placesApi.getTouristicPlaces();
+        data(placeCall);
 
-        filtersVisible=false;
-
-
-        Call<List<Place>> placeCall=placesApi.getTouristicPlaces();
-        placeCall.enqueue(new Callback<List<Place>>() {
-            @Override
-            public void onResponse(Call<List<Place>> call, Response<List<Place>> response) {
-                placesAdapter.reloadData(response.body());
-            }
-            @Override
-            public void onFailure(Call<List<Place>> call, Throwable t) {
-                Toast.makeText(getContext(), "Error al obtener los libros", Toast.LENGTH_SHORT).show();
-            }
-        });
+        placesAdapter.setOnClickListener(v ->navToIndividualView(userId,v));
 
         searchPlace.setOnQueryTextListener(this);
 
-        filterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!filtersVisible) {
-                    filterAZ.setVisibility(View.VISIBLE);
-                    filterZA.setVisibility(View.VISIBLE);
-                    cityAZFilter.setVisibility(View.VISIBLE);
-                    cityZAFilter.setVisibility(View.VISIBLE);
-                    rateASCFilter.setVisibility(View.VISIBLE);
-                    rateDESCFilter.setVisibility(View.VISIBLE);
-
-                    filtersVisible=true;
-                } else {
-                    filterAZ.setVisibility(View.GONE);
-                    filterZA.setVisibility(View.GONE);
-                    cityAZFilter.setVisibility(View.GONE);
-                    cityZAFilter.setVisibility(View.GONE);
-                    rateASCFilter.setVisibility(View.GONE);
-                    rateDESCFilter.setVisibility(View.GONE);
-                    filtersVisible = false;
-                }
-            }
+        filterButton.setOnClickListener(v -> {
+            if (!filtersVisible) visibilityVisible();
+            else visibilityGone();
         });
 
-        cityZAFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                placesAdapter.filterCityAZ();
-            }
-        });
+        filters();
 
-        cityAZFilter.setOnClickListener(new View.OnClickListener() {
+        placesRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onClick(View v) {
-                placesAdapter.filterCityZA();
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (filtersVisible) visibilityGone();
             }
-        });
 
-        rateASCFilter.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                placesAdapter.filterRateASC();
-            }
-        });
-
-        rateDESCFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                placesAdapter.filterRateDESC();
-            }
-        });
-
-        filterAZ.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                placesAdapter.filterAZ();
-            }
-        });
-
-        filterZA.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                placesAdapter.filterZA();
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
             }
         });
         return placesView;
     }
-
 
     @Override
     public boolean onQueryTextSubmit(String query) {
@@ -207,5 +164,90 @@ public class PlacesFragment extends Fragment implements SearchView.OnQueryTextLi
     public boolean onQueryTextChange(String newText) {
         placesAdapter.filter(newText);
         return false;
+    }
+
+    public void filters(){
+        cityZAFilter.setOnClickListener(v -> placesAdapter.filterCityAZ());
+        cityAZFilter.setOnClickListener(v -> placesAdapter.filterCityZA());
+        rateASCFilter.setOnClickListener(v -> placesAdapter.filterRateASC());
+        rateDESCFilter.setOnClickListener(v -> placesAdapter.filterRateDESC());
+        filterAZ.setOnClickListener(v -> placesAdapter.filterAZ());
+        filterZA.setOnClickListener(v -> placesAdapter.filterZA());
+        dateASCFilter.setOnClickListener(v -> placesAdapter.dateASC());
+        dateDESCFilter.setOnClickListener(v -> placesAdapter.dateDESC());
+    }
+    public void visibilityGone(){
+        filtersVisible=false;
+        filterAZ.hide();
+        filterZA.hide();
+        cityAZFilter.hide();
+        cityZAFilter.hide();
+        rateASCFilter.hide();
+        rateDESCFilter.hide();
+        dateASCFilter.hide();
+        dateDESCFilter.hide();
+    }
+
+    public void visibilityVisible(){
+        filtersVisible=true;
+        filterAZ.show();
+        filterZA.show();
+        cityAZFilter.show();
+        cityZAFilter.show();;
+        rateASCFilter.show();
+        rateDESCFilter.show();
+        dateDESCFilter.show();
+        dateASCFilter.show();
+    }
+
+    public void instanceButtons(View placesView){
+        searchPlace= placesView.findViewById(R.id.places_search_bar);
+        filterButton= placesView.findViewById(R.id.filterBtn);
+        filterAZ= placesView.findViewById(R.id.AZFilter);
+        filterZA= placesView.findViewById(R.id.ZAFilter);
+        cityAZFilter= placesView.findViewById(R.id.cityAZFilter);
+        cityZAFilter= placesView.findViewById(R.id.cityZAFilter);
+        rateASCFilter= placesView.findViewById(R.id.rateASCFilter);
+        rateDESCFilter= placesView.findViewById(R.id.rateDESCFilter);
+        dateDESCFilter=placesView.findViewById(R.id.dateDESCFilter);
+        dateASCFilter=placesView.findViewById(R.id.dateASCFilter);
+    }
+
+    public void navToIndividualView(int userId, View v){
+        Place place =placesAdapter.getPlaceByIndex(placesRecyclerView.getChildAdapterPosition(v));
+        scoreApi= ApiClient.getInstanceRetrofit().create(ScoreApi.class);
+        Call<Score> scores=scoreApi.findByUserAndPlace(userId,place.id);
+        scores.enqueue(new Callback<Score>() {
+            @Override
+            public void onResponse(Call<Score> call, Response<Score> response) {
+                score = response.body();
+                intentToIndividualPlace(place,v);
+            }
+
+            @Override
+            public void onFailure(Call<Score> call, Throwable t) {
+                intentToIndividualPlace(place,v);
+            }
+        });
+    }
+
+    public  void data(Call<List<Place>> placeCall){
+        placeCall.enqueue(new Callback<List<Place>>() {
+            @Override
+            public void onResponse(Call<List<Place>> call, Response<List<Place>> response) {
+                placesAdapter.reloadData(response.body());
+            }
+            @Override
+            public void onFailure(Call<List<Place>> call, Throwable t) {
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void intentToIndividualPlace(Place place, View v){
+        Intent intent = new Intent(v.getContext(), PlaceDescription.class);
+        intent.putExtra("place", place);
+        intent.putExtra("score", score);
+        v.getContext().startActivity(intent);
     }
 }

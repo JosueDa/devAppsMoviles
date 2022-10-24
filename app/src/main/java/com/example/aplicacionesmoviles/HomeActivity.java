@@ -1,14 +1,11 @@
 package com.example.aplicacionesmoviles;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.example.aplicacionesmoviles.databinding.ActivityHomeBinding;
@@ -16,7 +13,6 @@ import com.example.aplicacionesmoviles.fragments.PlacesFragment;
 import com.example.aplicacionesmoviles.fragments.RestaurantsFragment;
 import com.example.aplicacionesmoviles.utils.SessionManagement;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -38,24 +34,24 @@ public class HomeActivity extends AppCompatActivity {
         fragmentManager.beginTransaction().add(binding.frameContainer.getId(), placesFragment).show(placesFragment).commit();
 
         navigationView=binding.navigationBar;
-        navigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.touristic_places:
-                        fragmentManager.beginTransaction().show(placesFragment).commit();
-                        fragmentManager.beginTransaction().hide(restaurantsFragment).commit();
-                        return true;
-                    case R.id.restaurants:
-                        fragmentManager.beginTransaction().show(restaurantsFragment).commit();
-                        fragmentManager.beginTransaction().hide(placesFragment).commit();
-                        return true;
-                    case R.id.logOutMenu:
-                        logOut();
-                        return true;
-                }
-                return false;
+        navigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()){
+                case R.id.touristic_places:
+                    fragmentManager.beginTransaction().show(placesFragment).commit();
+                    fragmentManager.beginTransaction().hide(restaurantsFragment).commit();
+                    return true;
+                case R.id.restaurants:
+                    fragmentManager.beginTransaction().show(restaurantsFragment).commit();
+                    fragmentManager.beginTransaction().hide(placesFragment).commit();
+                    return true;
+                case R.id.logOutMenu:
+                    logOut();
+                    return true;
+                case R.id.FavMenuBtn:
+                    Intent intent = new Intent(getApplicationContext(), FavActivity.class);
+                    startActivity(intent);
             }
+            return false;
         });
     }
 

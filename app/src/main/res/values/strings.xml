@@ -28,4 +28,10 @@
     <string name="popularidad_desc">Popularidad DESC</string>
     <string name="popularidad_asce">Popularidad ASCE</string>
     <string name="z_a_filter">Z-A</string>
+    <string name="commentsTitle">Comentarios:</string>
+    <string name="TabItemText1">Descripción</string>
+    <string name="TabItemText2">Comentarios</string>
+    <string name="CalendarVisitsTitle">Ingresa la fecha de tu última visita</string>
+    <string name="WithoutVisit">Visítalo Pronto</string>
+    <string name="WithVisit">Última visita: </string>
 </resources>

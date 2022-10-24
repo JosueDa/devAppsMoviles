@@ -5,16 +5,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
-import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.aplicacionesmoviles.MainActivity;
+import com.example.aplicacionesmoviles.PlaceDescription;
 import com.example.aplicacionesmoviles.R;
+import com.example.aplicacionesmoviles.api.ApiClient;
+import com.example.aplicacionesmoviles.api.FavoriteApi;
+import com.example.aplicacionesmoviles.api.VisitsApi;
+import com.example.aplicacionesmoviles.model.Comment;
+import com.example.aplicacionesmoviles.model.Favorite;
 import com.example.aplicacionesmoviles.model.Place;
+import com.example.aplicacionesmoviles.model.Visit;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,15 +32,29 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> implements View.OnClickListener {
 
     private List<Place> mPlaces;
-    private List<Place> originalsPlaces=new ArrayList<Place>();
+    private final List<Place> originalsPlaces=new ArrayList<>();
     private Context context;
+    private View.OnClickListener listener;
+    FavoriteApi favoriteApi = ApiClient.getInstanceRetrofit().create(FavoriteApi.class);
+    VisitsApi visitsApi= ApiClient.getInstanceRetrofit().create(VisitsApi.class);
+    List<Favorite> favorites=new ArrayList<>();
+    List<Visit> visits=new ArrayList<>();
 
-    public PlaceAdapter(List<Place> mPlaces) {
+    int userId;
+    boolean fav=false;
+    public PlaceAdapter(List<Place> mPlaces, int userId) {
         this.mPlaces = mPlaces;
         this.originalsPlaces.addAll(mPlaces);
+        this.userId=userId;
+        getFavorites(userId);
+        getVisits(userId);
     }
 
     public void reloadData(List<Place> places){
@@ -53,65 +77,57 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
     }
 
     public void filterCityAZ(){
-        mPlaces.sort(new Comparator<Place>() {
-            @Override
-            public int compare(Place p1, Place p2) {
-                return p2.city.compareTo(p1.city);
-            }
-        });
+        mPlaces.sort((p1, p2) -> p2.city.compareTo(p1.city));
         notifyDataSetChanged();
     }
 
     public void filterCityZA(){
-        mPlaces.sort(new Comparator<Place>() {
-            @Override
-            public int compare(Place p1, Place p2) {
-                return p1.city.compareTo(p2.city);
-            }
-        });
+        mPlaces.sort(Comparator.comparing(p -> p.city));
         notifyDataSetChanged();
     }
 
     public void filterRateASC(){
-        mPlaces.sort(new Comparator<Place>() {
-            @Override
-            public int compare(Place p1, Place p2) {
-                return p1.score.compareTo(p2.score);
-            }
-        });
+        mPlaces.sort(Comparator.comparing(p -> p.score));
         notifyDataSetChanged();
     }
 
     public void filterRateDESC(){
-        mPlaces.sort(new Comparator<Place>() {
-            @Override
-            public int compare(Place p2, Place p1) {
-                return p1.score.compareTo(p2.score);
-            }
-        });
+        mPlaces.sort((p2, p1) -> p1.score.compareTo(p2.score));
         notifyDataSetChanged();
     }
 
     public void filterAZ(){
-        mPlaces.sort(new Comparator<Place>() {
-            @Override
-            public int compare(Place p1, Place p2) {
-                return p1.name.compareTo(p2.name);
-            }
-        });
+        mPlaces.sort(Comparator.comparing(p -> p.name));
         notifyDataSetChanged();
     }
 
     public void filterZA(){
-        mPlaces.sort(new Comparator<Place>() {
-            @Override
-            public int compare(Place p2, Place p1) {
-                return p1.name.compareTo(p2.name);
-            }
-        });
+        mPlaces.sort((p2, p1) -> p1.name.compareTo(p2.name));
         notifyDataSetChanged();
     }
 
+    public void dateDESC(){
+        mPlaces.sort((p2, p1) ->  p1.visit.compareTo(p2.visit));
+        notifyDataSetChanged();
+    }
+
+    public void dateASC(){
+        mPlaces.sort(Comparator.comparing(p -> p.visit));
+        notifyDataSetChanged();
+        rotatePlacesByVisits();
+    }
+
+    public void rotatePlacesByVisits(){
+        int iterations=0;
+        for (int i=0; i<mPlaces.size();i++){
+            if (mPlaces.get(i).visit.equals("")) {
+               iterations++;
+            }
+        }
+        for (int i=0;i<iterations;i++){
+            Collections.rotate(mPlaces,mPlaces.size()-1);
+        }
+    }
     @NonNull
     @Override
     public PlaceAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -119,15 +135,31 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
         LayoutInflater inflater=LayoutInflater.from(parent.getContext());
 
         View contactView=inflater.inflate(R.layout.item_place,parent,false);
+        contactView.setOnClickListener(this);
 
-        ViewHolder viewHolder=new ViewHolder(contactView);
 
-        return viewHolder;
+        setVisits();
+        return new ViewHolder(contactView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PlaceAdapter.ViewHolder holder, int position) {
-        Place place =mPlaces.get(position);
+    public void onBindViewHolder (@NonNull PlaceAdapter.ViewHolder holder, int position) {
+
+        Place place =getPlaceByIndex(position);
+
+        int visitIndex=getVisitIndex(place.id);
+        TextView lastVisit= holder.mLastVisit;
+
+        if (visitIndex==-1){
+            place.visit="";
+            lastVisit.setText(R.string.WithoutVisit);
+        }
+        else {
+            place.visit= visits.get(visitIndex).visit;
+            place.visitId=visits.get(visitIndex).id;
+            String date= "Última visita: "+place.visit;
+            lastVisit.setText(date);
+        }
 
         TextView placeNameTextView= holder.mPlaceName;
         placeNameTextView.setText(place.name);
@@ -140,6 +172,15 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
 
         RatingBar ratingPlace=holder.mPlaceRate;
         ratingPlace.setRating(Float.parseFloat(place.score));
+
+        ToggleButton favBtn= holder.favBtn;
+
+        favBtn.setChecked(isFavorite(favorites, place.id));
+
+        favBtn.setOnClickListener(v ->{
+           if (!favBtn.isChecked()) deleteFav(place.id);
+           else addFav(place.id,userId);
+        });
     }
 
     @Override
@@ -147,13 +188,132 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
         return mPlaces.size();
     }
 
+    public Place getPlaceByIndex(int index) {
+        return mPlaces.get(index);
+    }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    public void setOnClickListener(View.OnClickListener listener){
+        this.listener=listener;
+    }
 
-        private ImageView mPlaceImage;
-        private TextView mPlaceName;
-        private TextView mPlaceCity;
-        private RatingBar mPlaceRate;
+    @Override
+    public void onClick(View v) {
+        if (listener!=null) listener.onClick(v);
+    }
+
+    public void addFav(int placeId, int user){
+        Favorite favorite=new Favorite();
+        favorite.place=placeId;
+        favorite.user=user;
+
+        Call<Favorite> favoriteCall=favoriteApi.createFavorite(favorite);
+        favoriteCall.enqueue(new Callback<Favorite>() {
+            @Override
+            public void onResponse(Call<Favorite> call, Response<Favorite> response) {
+                getFavorites(favorite.user);
+            }
+
+            @Override
+            public void onFailure(Call<Favorite> call, Throwable t) {
+                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void deleteFav(int placeId){
+        int id=getFavIndex(favorites,placeId);
+        Favorite favorite= favorites.get(id);
+
+        Call<Void> favoriteCall=favoriteApi.deleteFav(favorite.id);
+        favoriteCall.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                favorites.remove(id);
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    public void getFavorites(int userId){
+        Call<List<Favorite>> favoritesCall= favoriteApi.getFavoritesByUserId(userId);
+        favoritesCall.enqueue(new Callback<List<Favorite>>() {
+            @Override
+            public void onResponse(Call<List<Favorite>> call, Response<List<Favorite>> response) {
+                favorites=response.body();
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<List<Favorite>> call, Throwable t) {
+                System.out.println(t.getMessage());
+
+            }
+        });
+    }
+
+    public void getVisits(int userId){
+        Call<List<Visit>> visitsCalls= visitsApi.findVisitsByUserId(userId);
+        visitsCalls.enqueue(new Callback<List<Visit>>() {
+            @Override
+            public void onResponse(Call<List<Visit>> call, Response<List<Visit>> response) {
+                visits=response.body();
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<List<Visit>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public boolean isFavorite(List<Favorite> favorites, int placeId){
+        boolean res=false;
+        for (int i=0; i<favorites.size();i++){
+            if (favorites.get(i).place==placeId) res=true;
+        }
+        return res;
+    }
+
+    public void setVisits(){
+        for (int i=0; i<mPlaces.size();i++){
+            int index =getVisitIndex(mPlaces.get(i).id);
+            if (index==-1)mPlaces.get(i).visit="";
+            else {
+                mPlaces.get(i).visit=visits.get(index).visit;
+                mPlaces.get(i).visitId=visits.get(index).id;
+            }
+        }
+    }
+
+    public int getFavIndex(List<Favorite> favorites, int placeId){
+        for (int i=0; i<favorites.size();i++){
+            if (favorites.get(i).place==placeId) return i;
+        }
+        return -1;
+    }
+
+    public int getVisitIndex( int placeId){
+        for (int i=0; i<visits.size();i++){
+            if (visits.get(i).place==placeId) return i;
+        }
+        return -1;
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder{
+
+        private final ImageView mPlaceImage;
+        private final TextView mPlaceName;
+        private final TextView mPlaceCity;
+        private final RatingBar mPlaceRate;
+        private final ToggleButton favBtn;
+        private final TextView mLastVisit;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -161,6 +321,9 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
             mPlaceName=(TextView) itemView.findViewById(R.id.place_name);
             mPlaceCity=(TextView)itemView.findViewById(R.id.place_city);
             mPlaceRate=(RatingBar) itemView.findViewById(R.id.ratingBar);
+            favBtn=(ToggleButton) itemView.findViewById(R.id.favBtn);
+            mLastVisit=(TextView) itemView.findViewById(R.id.lastVisitedItem);
+
         }
     }
 }

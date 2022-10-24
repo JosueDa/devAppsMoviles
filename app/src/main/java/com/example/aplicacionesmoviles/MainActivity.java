@@ -60,13 +60,13 @@ public class MainActivity extends AppCompatActivity {
                     sessionManagement.saveSession(user);
                     moveToHomeActivity();
                 }else {
-                    Toast.makeText(MainActivity.this, "Contraseña incorrecta", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Contraseña o contrseña incorrecta", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "correo o contraseña inorrecta", Toast.LENGTH_SHORT).show();
             }
         });
     }

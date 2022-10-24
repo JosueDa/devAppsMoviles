@@ -29,6 +29,7 @@
         />
 
 
+
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/filterBtn"
         android:layout_width="wrap_content"
@@ -52,7 +53,7 @@
         android:layout_marginEnd="5dp"
         android:gravity="center"
         android:text="@string/z_a_filter"
-         />
+        />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/AZFilter"
@@ -107,6 +108,28 @@
         android:layout_marginBottom="10dp"
         android:gravity="center"
         android:text="@string/popularidad_asce"
+        />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/dateASCFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/rateASCFilter"
+        app:layout_constraintEnd_toEndOf="@id/AZFilter"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:text="Visitas ASC"
+        />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/dateDESCFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/dateASCFilter"
+        app:layout_constraintEnd_toEndOf="@id/AZFilter"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:text="Visitas DESC"
         />
 
 

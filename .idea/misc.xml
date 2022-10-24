@@ -5,18 +5,30 @@
       <map>
         <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2265" />
         <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/drawable/ic_baseline_filter_alt_24.xml" value="0.2405" />
+        <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/drawable/ic_comment.xml" value="0.2405" />
         <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/drawable/ic_email.xml" value="0.2185" />
+        <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/drawable/ic_home.xml" value="0.2" />
         <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/drawable/ic_lastname.xml" value="0.2185" />
         <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2265" />
+        <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/drawable/toggle_selector.xml" value="0.2" />
+        <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/layout/activity_fav_places.xml" value="0.25" />
+        <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/layout/activity_favorite.xml" value="0.10989583333333333" />
         <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/layout/activity_home.xml" value="0.176" />
         <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/layout/activity_place_description.xml" value="0.2" />
+        <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/layout/activity_place_description2.xml" value="0.10989583333333333" />
         <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/layout/activity_register.xml" value="0.264" />
         <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/layout/filter_layout.xml" value="0.25" />
-        <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/layout/fragment_places.xml" value="0.2" />
+        <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/layout/fragment_comments.xml" value="0.25" />
+        <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/layout/fragment_place_description.xml" value="0.25" />
+        <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/layout/fragment_places.xml" value="0.1" />
         <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/layout/fragment_restaurants.xml" value="0.25" />
-        <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/layout/item_place.xml" value="0.16799999999999998" />
+        <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/layout/item_comment.xml" value="0.264" />
+        <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/layout/item_place.xml" value="0.264" />
         <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/layout/item_places.xml" value="0.264" />
+        <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/layout/place_description.xml" value="0.10885416666666667" />
         <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/layout/rating_bar.xml" value="0.13903985507246377" />
+        <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/layout/toggle_selector.xml" value="0.24895833333333334" />
         <entry key="..\:/Users/josue/OneDrive/UNIS/Decimo Semestre/Desarrollo de aplicaciones moviles/ProyectoFinal/FrontEnd/app/src/main/res/menu/botton_menu.xml" value="0.25" />
       </map>
     </option>

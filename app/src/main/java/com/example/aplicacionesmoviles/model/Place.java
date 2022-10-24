@@ -1,6 +1,8 @@
 package com.example.aplicacionesmoviles.model;
 
-public class Place {
+import java.io.Serializable;
+
+public class Place implements Serializable {
 
     public int id;
     public String name;
@@ -8,5 +10,10 @@ public class Place {
     public String imageUrl;
     public String score;
     public String type;
+    public String description;
+    public String latitude;
+    public String longitude;
+    public String visit;
+    public int visitId;
 
 }
