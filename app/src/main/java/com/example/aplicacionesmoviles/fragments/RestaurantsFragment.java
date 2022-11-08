@@ -25,6 +25,8 @@ import com.example.aplicacionesmoviles.api.PlacesApi;
 import com.example.aplicacionesmoviles.api.ScoreApi;
 import com.example.aplicacionesmoviles.model.Place;
 import com.example.aplicacionesmoviles.model.Score;
+import com.example.aplicacionesmoviles.utils.ErrorModal;
+import com.example.aplicacionesmoviles.utils.LoadingBar;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.util.ArrayList;
@@ -57,7 +59,7 @@ public class RestaurantsFragment extends Fragment implements SearchView.OnQueryT
     int userId;
     private ScoreApi scoreApi;
     private Score score=new Score();
-
+    LoadingBar loadingDialog;
 
     public RestaurantsFragment() {
         // Required empty public constructor
@@ -66,15 +68,7 @@ public class RestaurantsFragment extends Fragment implements SearchView.OnQueryT
     public RestaurantsFragment(boolean fav) {
         this.fav=fav;
     }
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RestaurantsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static RestaurantsFragment newInstance(String param1, String param2) {
         RestaurantsFragment fragment = new RestaurantsFragment();
         Bundle args = new Bundle();
@@ -106,6 +100,9 @@ public class RestaurantsFragment extends Fragment implements SearchView.OnQueryT
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        loadingDialog= new LoadingBar(getContext());
+        loadingDialog.startDialog();
+
         SharedPreferences sharedPreferences= this.requireContext().getSharedPreferences("session", Context.MODE_PRIVATE);
         userId = sharedPreferences.getInt("id",-1);
 
@@ -233,10 +230,12 @@ public class RestaurantsFragment extends Fragment implements SearchView.OnQueryT
             @Override
             public void onResponse(Call<List<Place>> call, Response<List<Place>> response) {
                 placesAdapter.reloadData(response.body());
+                loadingDialog.hideDialog();
             }
             @Override
             public void onFailure(Call<List<Place>> call, Throwable t) {
-                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                loadingDialog.hideDialog();
+                ErrorModal.createErrorDialog(getContext(),getString(R.string.genericErrorText));
             }
         });
     }

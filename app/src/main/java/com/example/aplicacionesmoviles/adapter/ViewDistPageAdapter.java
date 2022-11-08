@@ -6,25 +6,22 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.example.aplicacionesmoviles.fragments.PlaceDistanceFragment;
 import com.example.aplicacionesmoviles.fragments.PlacesFragment;
 import com.example.aplicacionesmoviles.fragments.RestaurantsFragment;
 
 
-public class ViewFavPageAdapter extends FragmentStateAdapter {
+public class ViewDistPageAdapter extends FragmentStateAdapter {
 
-    boolean restaurantFav;
-    boolean placeFav;
-    public ViewFavPageAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle,boolean restaurantFav, boolean placeFav) {
+    public ViewDistPageAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
         super(fragmentManager, lifecycle);
-        this.restaurantFav =restaurantFav;
-        this.placeFav=placeFav;
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        if (position==0) return new PlacesFragment(placeFav);
-        else return new RestaurantsFragment(restaurantFav);
+        if (position==0) return new PlaceDistanceFragment(true);
+        else return new PlaceDistanceFragment(false);
     }
 
     @Override

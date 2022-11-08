@@ -1,6 +1,7 @@
 package com.example.aplicacionesmoviles.adapter;
 
 import android.content.Context;
+import android.location.Location;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.example.aplicacionesmoviles.MainActivity;
 import com.example.aplicacionesmoviles.PlaceDescription;
 import com.example.aplicacionesmoviles.R;
+import com.example.aplicacionesmoviles.RegisterActivity;
 import com.example.aplicacionesmoviles.api.ApiClient;
 import com.example.aplicacionesmoviles.api.FavoriteApi;
 import com.example.aplicacionesmoviles.api.VisitsApi;
@@ -25,6 +27,7 @@ import com.example.aplicacionesmoviles.model.Comment;
 import com.example.aplicacionesmoviles.model.Favorite;
 import com.example.aplicacionesmoviles.model.Place;
 import com.example.aplicacionesmoviles.model.Visit;
+import com.example.aplicacionesmoviles.utils.ErrorModal;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,7 +51,6 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
     List<Visit> visits=new ArrayList<>();
 
     int userId;
-    boolean fav=false;
     public PlaceAdapter(List<Place> mPlaces, int userId) {
         this.mPlaces = mPlaces;
         this.originalsPlaces.addAll(mPlaces);
@@ -113,10 +115,39 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
 
     public void dateASC(){
         mPlaces.sort(Comparator.comparing(p -> p.visit));
-        notifyDataSetChanged();
         rotatePlacesByVisits();
+        notifyDataSetChanged();
     }
 
+    public void placeDistance(double lat, double longitude, double km){
+        mPlaces.clear();
+        mPlaces.addAll(originalsPlaces);
+        List<Place> newPlaces=new ArrayList<>();
+        int size =mPlaces.size();
+        for (int i=0; i<size;i++){
+            double distance =mPlaces.get(i).distance=getDistance(lat,longitude,Double.parseDouble(mPlaces.get(i).latitude),Double.parseDouble(mPlaces.get(i).longitude));
+            if (distance<km){
+                newPlaces.add(mPlaces.get(i));
+            };
+        }
+
+        mPlaces=newPlaces;
+        mPlaces.sort(Comparator.comparing(p -> p.distance));
+
+        notifyDataSetChanged();
+    }
+
+    public double getDistance(double lat, double longitude, double latPlace, double longitudePlace){
+        Location startPoint=new Location("UserLocation");
+        startPoint.setLatitude(lat);
+        startPoint.setLongitude(longitude);
+
+        Location endPoint=new Location("PlaceLocation");
+        endPoint.setLatitude(latPlace);
+        endPoint.setLongitude(longitudePlace);
+
+        return startPoint.distanceTo(endPoint)/1000;
+    }
     public void rotatePlacesByVisits(){
         int iterations=0;
         for (int i=0; i<mPlaces.size();i++){
@@ -157,7 +188,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
         else {
             place.visit= visits.get(visitIndex).visit;
             place.visitId=visits.get(visitIndex).id;
-            String date= "Última visita: "+place.visit;
+            String date= "Última visita: "+place.getVisitDate();
             lastVisit.setText(date);
         }
 
@@ -215,7 +246,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
 
             @Override
             public void onFailure(Call<Favorite> call, Throwable t) {
-                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                ErrorModal.createErrorDialog(context,context.getString(R.string.genericErrorText));
             }
         });
     }
@@ -234,7 +265,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                ErrorModal.createErrorDialog(context,context.getString(R.string.genericErrorText));
             }
         });
 

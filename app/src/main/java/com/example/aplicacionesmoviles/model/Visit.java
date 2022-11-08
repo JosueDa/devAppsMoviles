@@ -12,4 +12,12 @@ public class Visit implements Serializable {
     @SerializedName("date")
     public String visit="";
 
+    public String getVisitDate(){
+        if(visit.equals("")) return visit;
+        else {
+            String[] yearMonthDay = visit.split("/");
+            return yearMonthDay[2]+"/"+yearMonthDay[1]+"/"+yearMonthDay[0];
+        }
+    }
+
 }

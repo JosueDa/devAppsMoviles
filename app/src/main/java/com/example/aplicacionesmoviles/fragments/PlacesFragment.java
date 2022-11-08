@@ -26,6 +26,8 @@ import com.example.aplicacionesmoviles.api.PlacesApi;
 import com.example.aplicacionesmoviles.api.ScoreApi;
 import com.example.aplicacionesmoviles.model.Place;
 import com.example.aplicacionesmoviles.model.Score;
+import com.example.aplicacionesmoviles.utils.ErrorModal;
+import com.example.aplicacionesmoviles.utils.LoadingBar;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.util.ArrayList;
@@ -59,6 +61,7 @@ public class PlacesFragment extends Fragment implements SearchView.OnQueryTextLi
     int userId;
     private ScoreApi scoreApi;
     private Score score=new Score();
+    LoadingBar loadingDialog;
 
     public PlacesFragment() {
         // Required empty public constructor
@@ -68,15 +71,6 @@ public class PlacesFragment extends Fragment implements SearchView.OnQueryTextLi
         this.fav=fav;
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PlacesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static PlacesFragment newInstance(String param1, String param2) {
         PlacesFragment fragment = new PlacesFragment();
         Bundle args = new Bundle();
@@ -89,7 +83,6 @@ public class PlacesFragment extends Fragment implements SearchView.OnQueryTextLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO: Rename and change types of parameters
     }
 
     @Override
@@ -109,6 +102,8 @@ public class PlacesFragment extends Fragment implements SearchView.OnQueryTextLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        loadingDialog= new LoadingBar(getContext());
+        loadingDialog.startDialog();
 
         SharedPreferences sharedPreferences= this.requireContext().getSharedPreferences("session", Context.MODE_PRIVATE);
         userId = sharedPreferences.getInt("id",-1);
@@ -213,6 +208,7 @@ public class PlacesFragment extends Fragment implements SearchView.OnQueryTextLi
         dateASCFilter=placesView.findViewById(R.id.dateASCFilter);
     }
 
+
     public void navToIndividualView(int userId, View v){
         Place place =placesAdapter.getPlaceByIndex(placesRecyclerView.getChildAdapterPosition(v));
         scoreApi= ApiClient.getInstanceRetrofit().create(ScoreApi.class);
@@ -226,7 +222,7 @@ public class PlacesFragment extends Fragment implements SearchView.OnQueryTextLi
 
             @Override
             public void onFailure(Call<Score> call, Throwable t) {
-                intentToIndividualPlace(place,v);
+                ErrorModal.createErrorDialog(v.getContext(),t.getMessage());
             }
         });
     }
@@ -236,10 +232,12 @@ public class PlacesFragment extends Fragment implements SearchView.OnQueryTextLi
             @Override
             public void onResponse(Call<List<Place>> call, Response<List<Place>> response) {
                 placesAdapter.reloadData(response.body());
+                loadingDialog.hideDialog();
             }
             @Override
             public void onFailure(Call<List<Place>> call, Throwable t) {
-                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                loadingDialog.hideDialog();
+                ErrorModal.createErrorDialog(getContext(),getString(R.string.genericErrorText));
             }
         });
     }

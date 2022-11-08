@@ -19,8 +19,22 @@ public class SessionManagement {
     public void saveSession(User user){
         String email=user.email;
         editor.putString(session_key,email);
+
+        String name=user.name;
+        editor.putString("name",name);
+
+        String lastname=user.lastName;
+        editor.putString("lastname",lastname);
+
         int id=user.id;
         editor.putInt("id",id);
+
+        editor.commit();
+    }
+
+    public void saveLocation(Double latitude, Double longitude){
+        editor.putFloat("latitude",latitude.floatValue());
+        editor.putFloat("longitude",longitude.floatValue());
         editor.commit();
     }
 

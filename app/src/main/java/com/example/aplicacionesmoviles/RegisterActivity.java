@@ -12,6 +12,7 @@ import com.example.aplicacionesmoviles.api.UsersApi;
 import com.example.aplicacionesmoviles.databinding.ActivityMainBinding;
 import com.example.aplicacionesmoviles.databinding.ActivityRegisterBinding;
 import com.example.aplicacionesmoviles.model.User;
+import com.example.aplicacionesmoviles.utils.ErrorModal;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,13 +50,13 @@ public class RegisterActivity extends AppCompatActivity {
                     Intent homeIntent = new Intent(getApplicationContext(), HomeActivity.class);
                     startActivity(homeIntent);
                 }else {
-                    Toast.makeText(RegisterActivity.this, "Error al crear el usuario", Toast.LENGTH_SHORT).show();
+                    ErrorModal.createErrorDialog(RegisterActivity.this,getString(R.string.genericErrorText));
                 }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(RegisterActivity.this, "Ha ocurrido un error", Toast.LENGTH_SHORT).show();
+                ErrorModal.createErrorDialog(RegisterActivity.this,getString(R.string.genericErrorText));
             }
         });
     }

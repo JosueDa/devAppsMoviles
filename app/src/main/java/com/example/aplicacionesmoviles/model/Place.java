@@ -15,5 +15,16 @@ public class Place implements Serializable {
     public String longitude;
     public String visit;
     public int visitId;
+    public double distance;
+
+    public String getVisitDate(){
+        if(visit.equals("")) return visit;
+        else {
+            String[] yearMonthDay = visit.split("/");
+            return yearMonthDay[2]+"/"+yearMonthDay[1]+"/"+yearMonthDay[0];
+        }
+    }
+
+
 
 }

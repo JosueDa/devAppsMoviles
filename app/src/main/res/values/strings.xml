@@ -16,7 +16,7 @@
     <string name="restaurantes_menu">Restaurantes</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="log_out_menu">Log Out</string>
+    <string name="log_out_menu">Perfil</string>
     <string name="home_menu">Home</string>
     <string name="image_place_description">Image Place</string>
     <string name="filterBtnText">Filtrar</string>
@@ -34,4 +34,7 @@
     <string name="CalendarVisitsTitle">Ingresa la fecha de tu última visita</string>
     <string name="WithoutVisit">Visítalo Pronto</string>
     <string name="WithVisit">Última visita: </string>
+    <string name="loadingText">Cargando...</string>
+    <string name="genericErrorText">Lo sentimos, hubo un error</string>
+    <string name="emailErrorText">Correo o contraseña incorrecta</string>
 </resources>

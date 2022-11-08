@@ -22,6 +22,7 @@ import com.example.aplicacionesmoviles.api.ApiClient;
 import com.example.aplicacionesmoviles.api.PlacesApi;
 import com.example.aplicacionesmoviles.model.Comment;
 import com.example.aplicacionesmoviles.model.Place;
+import com.example.aplicacionesmoviles.utils.ErrorModal;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -92,7 +93,7 @@ public class CommentsFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<Comment>> call, Throwable t) {
-                Toast.makeText(getContext(), "Error to get data", Toast.LENGTH_SHORT).show();
+                ErrorModal.createErrorDialog(getContext(),getString(R.string.genericErrorText));
             }
         });
 
@@ -101,7 +102,7 @@ public class CommentsFragment extends Fragment {
     }
 
     public String getDate(){
-        SimpleDateFormat dtf = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat dtf = new SimpleDateFormat("yyyy-MM-dd");
         Calendar calendar = Calendar.getInstance();
 
         Date dateObj = calendar.getTime();
@@ -119,7 +120,7 @@ public class CommentsFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Comment> call, Throwable t) {
-                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                ErrorModal.createErrorDialog(getContext(),getString(R.string.genericErrorText));
             }
         });
     }

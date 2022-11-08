@@ -12,14 +12,19 @@
         android:icon="@drawable/ic_restaurant"
         />
     <item
-        android:id="@+id/logOutMenu"
-        android:title="@string/log_out_menu"
-        android:icon="@drawable/ic_log_out"
-        />
-
-    <item
         android:id="@+id/FavMenuBtn"
         android:title="Favoritos"
         android:icon="@drawable/ic_fav"
         />
+    <item
+        android:id="@+id/NearMeMenuBtn"
+        android:title="Cerca de Mi"
+        android:icon="@drawable/ic_map"
+        />
+    <item
+        android:id="@+id/logOutMenu"
+        android:title="@string/log_out_menu"
+        android:icon="@drawable/ic_person"
+        />
+
 </menu>

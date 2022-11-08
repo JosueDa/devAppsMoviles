@@ -31,6 +31,7 @@ import com.example.aplicacionesmoviles.databinding.ActivityPlaceDescriptionBindi
 import com.example.aplicacionesmoviles.model.Place;
 import com.example.aplicacionesmoviles.model.Score;
 import com.example.aplicacionesmoviles.model.Visit;
+import com.example.aplicacionesmoviles.utils.ErrorModal;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.Calendar;
@@ -114,7 +115,7 @@ public class PlaceDescription extends AppCompatActivity {
 
         ratingPlace.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> createScore(rating));
 
-        calendarBtn.setOnClickListener(v -> onSetDateListener(lastVisited));
+        calendarBtn.setOnClickListener(v -> onSetDateListener(lastVisited,placeDescriptionViewBinding.getContext()));
     }
 
     public void instanceViews(ActivityPlaceDescriptionBinding binding,Place place){
@@ -163,25 +164,25 @@ public class PlaceDescription extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Score> call, Throwable t) {
-                Toast.makeText(PlaceDescription.this, "Lo sentimos, hubo un error", Toast.LENGTH_SHORT).show();
+                ErrorModal.createErrorDialog(PlaceDescription.this,getString(R.string.genericErrorText));
             }
         });
     }
 
-    public void createVisit(Visit visit, TextView lastVisited){
+    public void createVisit(Visit visit, TextView lastVisited, Context context){
         visitsApi= ApiClient.getInstanceRetrofit().create(VisitsApi.class);
         Call<Visit> visitCall= visitsApi.createVisit(visit);
         visitCall.enqueue(new Callback<Visit>() {
             @Override
             public void onResponse(Call<Visit> call, Response<Visit> response) {
                 Visit visitResponse= response.body();
-                String date= "Última visita: "+visitResponse.visit;
+                String date= "Última visita: "+visitResponse.getVisitDate();
                 lastVisited.setText(date);
             }
 
             @Override
             public void onFailure(Call<Visit> call, Throwable t) {
-
+                ErrorModal.createErrorDialog(context,getString(R.string.genericErrorText));
             }
         });
     }
@@ -208,14 +209,14 @@ public class PlaceDescription extends AppCompatActivity {
             return newVisit;
     }
 
-    public void onSetDateListener(TextView lastVisited){
+    public void onSetDateListener(TextView lastVisited,Context context){
         final Calendar calendar = Calendar.getInstance();
         day = calendar.get(Calendar.DAY_OF_MONTH);
         month = calendar.get(Calendar.MONTH);
         year = calendar.get(Calendar.YEAR);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(PlaceDescription.this, (view, year, month, dayOfMonth) -> {
-            createVisit(createVisitObject(date(year,month,dayOfMonth)), lastVisited);
+            createVisit(createVisitObject(date(year,month,dayOfMonth)), lastVisited,context);
         },year, month,day);
 
         datePickerDialog.setCustomTitle(datePickerTitle());
@@ -236,7 +237,7 @@ public class PlaceDescription extends AppCompatActivity {
         }
         else dayFinal=String.valueOf(dayOfMonth);
 
-        return dayFinal+"/"+monthFinal+"/"+year;
+        return year +"/"+monthFinal+"/"+dayFinal;
     }
 
 }

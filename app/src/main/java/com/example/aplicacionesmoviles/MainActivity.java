@@ -5,12 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.aplicacionesmoviles.api.ApiClient;
 import com.example.aplicacionesmoviles.api.UsersApi;
 import com.example.aplicacionesmoviles.databinding.ActivityMainBinding;
 import com.example.aplicacionesmoviles.model.User;
+import com.example.aplicacionesmoviles.utils.ErrorModal;
+import com.example.aplicacionesmoviles.utils.LoadingBar;
 import com.example.aplicacionesmoviles.utils.SessionManagement;
 
 import retrofit2.Call;
@@ -20,6 +21,8 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     private UsersApi mUserApi;
+    LoadingBar loadingDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,8 +33,11 @@ public class MainActivity extends AppCompatActivity {
         View mainViewBinding = binding.getRoot();
         setContentView(mainViewBinding);
 
-        binding.logInBtn.setOnClickListener(listener ->
-                login(binding.email.getText().toString(),binding.password.getText().toString()));
+        binding.logInBtn.setOnClickListener(listener ->{
+                    loadingDialog= new LoadingBar(this);
+                    loadingDialog.startDialog();
+                    login(binding.email.getText().toString(),binding.password.getText().toString());
+                });
 
         binding.registerBtn.setOnClickListener(listener -> {
             Intent registerIntent = new Intent(getApplicationContext(), RegisterActivity.class);
@@ -58,15 +64,18 @@ public class MainActivity extends AppCompatActivity {
                 if (user.password.equals(password)){
                     SessionManagement sessionManagement = new SessionManagement(MainActivity.this);
                     sessionManagement.saveSession(user);
+                    loadingDialog.hideDialog();
                     moveToHomeActivity();
                 }else {
-                    Toast.makeText(MainActivity.this, "Contraseña o contrseña incorrecta", Toast.LENGTH_SHORT).show();
+                    loadingDialog.hideDialog();
+                    ErrorModal.createErrorDialog(MainActivity.this,getString(R.string.emailErrorText));
                 }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "correo o contraseña inorrecta", Toast.LENGTH_SHORT).show();
+                loadingDialog.hideDialog();
+                ErrorModal.createErrorDialog(MainActivity.this,getString(R.string.emailErrorText));
             }
         });
     }

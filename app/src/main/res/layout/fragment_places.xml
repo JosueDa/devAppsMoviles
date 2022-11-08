@@ -43,17 +43,6 @@
         app:icon="@drawable/ic_baseline_filter_alt_24"
         />
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/ZAFilter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/filterBtn"
-        app:layout_constraintEnd_toStartOf="@id/filterBtn"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="5dp"
-        android:gravity="center"
-        android:text="@string/z_a_filter"
-        />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/AZFilter"
@@ -67,6 +56,18 @@
         />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/ZAFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/filterBtn"
+        app:layout_constraintEnd_toStartOf="@id/filterBtn"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="5dp"
+        android:gravity="center"
+        android:text="@string/z_a_filter"
+        />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/cityAZFilter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -76,6 +77,7 @@
         android:gravity="center"
         android:text="@string/departamento_a_z_filter"
         />
+
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/cityZAFilter"

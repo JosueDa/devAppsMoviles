@@ -1,12 +1,17 @@
 package com.example.aplicacionesmoviles;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.aplicacionesmoviles.databinding.ActivityHomeBinding;
 import com.example.aplicacionesmoviles.fragments.PlacesFragment;
@@ -48,8 +53,13 @@ public class HomeActivity extends AppCompatActivity {
                     logOut();
                     return true;
                 case R.id.FavMenuBtn:
-                    Intent intent = new Intent(getApplicationContext(), FavActivity.class);
-                    startActivity(intent);
+                    Intent favIntent = new Intent(getApplicationContext(), FavActivity.class);
+                    startActivity(favIntent);
+                    return true;
+                case R.id.NearMeMenuBtn:
+                    Intent nearMeIntent = new Intent(getApplicationContext(), NearMeActivity.class);
+                    startActivity(nearMeIntent);
+                    return true;
             }
             return false;
         });
@@ -60,6 +70,36 @@ public class HomeActivity extends AppCompatActivity {
         sessionManagement.removeSession();
         Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(mainActivity);
+    }
+
+    boolean doubleBackToExitPressedOnce = false;
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+            builder1.setMessage("Estás seguro de salir?");
+            builder1.setCancelable(true);
+
+            builder1.setPositiveButton(
+                    "Ok",
+                    (dialog, id) -> finishAffinity());
+
+            builder1.setNegativeButton(
+                    "Cancel",
+                    (dialog, id) -> dialog.cancel());
+            AlertDialog alert11 = builder1.create();
+            alert11.show();
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 1000);
     }
 
 }

@@ -15,12 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aplicacionesmoviles.MainActivity;
 import com.example.aplicacionesmoviles.R;
+import com.example.aplicacionesmoviles.RegisterActivity;
 import com.example.aplicacionesmoviles.api.ApiClient;
 import com.example.aplicacionesmoviles.api.FavoriteApi;
 import com.example.aplicacionesmoviles.api.PlacesApi;
 import com.example.aplicacionesmoviles.model.Comment;
 import com.example.aplicacionesmoviles.model.Favorite;
 import com.example.aplicacionesmoviles.model.User;
+import com.example.aplicacionesmoviles.utils.ErrorModal;
 import com.example.aplicacionesmoviles.utils.SessionManagement;
 
 import java.util.List;
@@ -117,7 +119,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
+                ErrorModal.createErrorDialog(context,context.getString(R.string.genericErrorText));
             }
         });
     }
