@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".UpdateProfileActivity"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:orientation="vertical"
-    android:background="@drawable/background">
-
+    android:background="@drawable/background2">
 
     <TextView
         android:layout_width="match_parent"
@@ -15,12 +16,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/title"
-        android:text="@string/registerMessage"
+        android:text="Actualiza tu información"
         android:gravity="center"
         android:textStyle="bold"
-        android:textSize="40sp"
+        android:textSize="35sp"
         android:textColor="@color/purple_700"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="150dp"
         />
 
 
@@ -75,71 +76,32 @@
         android:textColorHint="@color/black"
         android:autofillHints="lastName" />
 
-    <EditText
-        android:id="@+id/email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/lastName"
-        android:drawableStart="@drawable/ic_email"
-        android:drawablePadding="10dp"
-        android:hint="@string/emailHint"
-        android:inputType="textEmailAddress"
-        android:padding="15dp"
-        android:textColor="@color/black"
-        android:textColorHint="@color/black"
-        android:autofillHints="email" />
-
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/email"
-        android:drawableStart="@drawable/ic_password"
-        android:drawablePadding="10dp"
-        android:hint="@string/passwordHint"
-        android:inputType="textPassword"
-        android:padding="15dp"
-        android:textColor="@color/black"
-        android:textColorHint="@color/black"
-        android:autofillHints="password" />
-
-    <EditText
-        android:id="@+id/confirmPass"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/password"
-        android:drawableStart="@drawable/ic_password"
-        android:drawablePadding="10dp"
-        android:hint="Confirmar contraseña"
-        android:inputType="textPassword"
-        android:padding="15dp"
-        android:textColor="@color/black"
-        android:textColorHint="@color/black"
-        android:autofillHints="lastName" />
-
-    <TextView
-        android:id="@+id/errorMsg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/confirmPass"
-        app:layout_constraintStart_toStartOf="@id/confirmPass"
-        android:textColor="@color/design_default_color_error"
-        />
-
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/confirmPass"
-        app:layout_constraintEnd_toEndOf="@id/confirmPass"
-        android:id="@+id/registerBtn"
-        android:layout_margin="20dp"
-        android:padding="15dp"
-        android:text="@string/registerBtnText"
+        app:layout_constraintTop_toBottomOf="@id/lastName"
+        app:layout_constraintEnd_toEndOf="@id/lastName"
+        android:id="@+id/updateBtn"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"
+        android:text="Actualizar"
         android:backgroundTint="@color/purple_700"
         android:layout_gravity="center"
         />
 
-
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/lastName"
+        app:layout_constraintRight_toLeftOf="@id/updateBtn"
+        android:id="@+id/updatePassBtn"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:padding="10dp"
+        android:text="Cambiar Contraseña"
+        android:backgroundTint="@color/purple_700"
+        android:layout_gravity="center"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

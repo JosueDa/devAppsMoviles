@@ -161,15 +161,43 @@ public class PlacesFragment extends Fragment implements SearchView.OnQueryTextLi
         return false;
     }
 
+    public void afterFilter(){
+        visibilityGone();
+        placesRecyclerView.scrollToPosition(0);
+    }
     public void filters(){
-        cityZAFilter.setOnClickListener(v -> placesAdapter.filterCityAZ());
-        cityAZFilter.setOnClickListener(v -> placesAdapter.filterCityZA());
-        rateASCFilter.setOnClickListener(v -> placesAdapter.filterRateASC());
-        rateDESCFilter.setOnClickListener(v -> placesAdapter.filterRateDESC());
-        filterAZ.setOnClickListener(v -> placesAdapter.filterAZ());
-        filterZA.setOnClickListener(v -> placesAdapter.filterZA());
-        dateASCFilter.setOnClickListener(v -> placesAdapter.dateASC());
-        dateDESCFilter.setOnClickListener(v -> placesAdapter.dateDESC());
+        cityZAFilter.setOnClickListener(v -> {
+            placesAdapter.filterCityAZ();
+            afterFilter();
+        });
+        cityAZFilter.setOnClickListener(v -> {
+            placesAdapter.filterCityZA();
+            afterFilter();
+        });
+        rateASCFilter.setOnClickListener(v -> {
+            placesAdapter.filterRateASC();
+            afterFilter();
+        });
+        rateDESCFilter.setOnClickListener(v -> {
+            placesAdapter.filterRateDESC();
+            afterFilter();
+        });
+        filterAZ.setOnClickListener(v -> {
+            placesAdapter.filterAZ();
+            afterFilter();
+        });
+        filterZA.setOnClickListener(v -> {
+            placesAdapter.filterZA();
+            afterFilter();
+        });
+        dateASCFilter.setOnClickListener(v -> {
+            placesAdapter.dateASC();
+            afterFilter();
+        });
+        dateDESCFilter.setOnClickListener(v -> {
+            placesAdapter.dateDESC();
+            afterFilter();
+        });
     }
     public void visibilityGone(){
         filtersVisible=false;

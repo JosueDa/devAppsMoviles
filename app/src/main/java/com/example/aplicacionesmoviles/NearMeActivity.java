@@ -17,8 +17,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.aplicacionesmoviles.adapter.ViewDistPageAdapter;
-import com.example.aplicacionesmoviles.adapter.ViewFavPageAdapter;
-import com.example.aplicacionesmoviles.databinding.ActivityFavPlacesBinding;
 import com.example.aplicacionesmoviles.databinding.ActivityNearMeBinding;
 import com.example.aplicacionesmoviles.utils.ErrorModal;
 import com.example.aplicacionesmoviles.utils.SessionManagement;

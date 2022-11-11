@@ -1,6 +1,8 @@
 package com.example.aplicacionesmoviles.model;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 
     public int id;
     public String name;
@@ -10,14 +12,7 @@ public class User {
     public String phone;
     public String password;
 
-    public User(int id, String name, String lastName, String email, String country, String phone, String password) {
-        this.id = id;
-        this.name = name;
-        this.lastName = lastName;
-        this.email = email;
-        this.country = country;
-        this.phone = phone;
-        this.password = password;
+    public User() {
     }
     public User(String name, String lastName, String email, String country, String phone, String password) {
         this.name = name;

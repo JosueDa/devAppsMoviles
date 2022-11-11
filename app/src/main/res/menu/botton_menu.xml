@@ -22,7 +22,7 @@
         android:icon="@drawable/ic_map"
         />
     <item
-        android:id="@+id/logOutMenu"
+        android:id="@+id/profileMenu"
         android:title="@string/log_out_menu"
         android:icon="@drawable/ic_person"
         />

@@ -11,6 +11,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aplicacionesmoviles.MainActivity;
@@ -83,7 +84,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             deleteButton.setVisibility(View.GONE);
         }
 
-        deleteButton.setOnClickListener(listener->deleteComment(comment.id,position));
+        deleteButton.setOnClickListener(listener->{
+            modalDeleteComment(context,"Seguro que deseas eliminar el comentario?",comment.id,position);
+        });
     }
 
     @Override
@@ -127,5 +130,22 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     public void addComment(Comment comment){
         mComments.add(comment);
         notifyDataSetChanged();
+    }
+
+    public void modalDeleteComment(Context context, String msg,int commentId, int position){
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+        builder1.setMessage(msg);
+        builder1.setCancelable(true);
+
+        builder1.setPositiveButton(
+                "Ok",
+                (dialog, id) -> deleteComment(commentId,position));
+
+        builder1.setNegativeButton(
+                "Cancelar",
+                (dialog, id) -> dialog.cancel());
+
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
     }
 }

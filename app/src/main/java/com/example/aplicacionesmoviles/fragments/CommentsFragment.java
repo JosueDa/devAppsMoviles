@@ -1,9 +1,11 @@
 package com.example.aplicacionesmoviles.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,16 +15,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.Toast;
 
 import com.example.aplicacionesmoviles.PlaceDescription;
 import com.example.aplicacionesmoviles.R;
+import com.example.aplicacionesmoviles.RatePlaceActivity;
+import com.example.aplicacionesmoviles.UpdateProfileActivity;
 import com.example.aplicacionesmoviles.adapter.CommentAdapter;
 import com.example.aplicacionesmoviles.api.ApiClient;
 import com.example.aplicacionesmoviles.api.PlacesApi;
+import com.example.aplicacionesmoviles.api.ScoreApi;
 import com.example.aplicacionesmoviles.model.Comment;
 import com.example.aplicacionesmoviles.model.Place;
+import com.example.aplicacionesmoviles.model.Score;
 import com.example.aplicacionesmoviles.utils.ErrorModal;
+import com.example.aplicacionesmoviles.utils.LoadingBar;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,8 +57,16 @@ public class CommentsFragment extends Fragment {
 
     PlacesApi placesApi;
     Place currentPlace=new Place();
+    private LoadingBar loadingDialog;
     CommentAdapter commentAdapter= new CommentAdapter(new ArrayList<>());
+    Score score;
+
+
     public CommentsFragment() {
+    }
+
+    public CommentsFragment(Score score) {
+        this.score=score;
     }
 
     public static CommentsFragment newInstance(String param1, String param2) {
@@ -78,6 +95,7 @@ public class CommentsFragment extends Fragment {
         EditText addCommentEditText= view.findViewById(R.id.addCommentEditText);
         Button addCommentBtn= view.findViewById(R.id.addCommentButton);
 
+
         placesApi= ApiClient.getInstanceRetrofit().create(PlacesApi.class);
 
         RecyclerView commentRecyclerView=(RecyclerView) view.findViewById(R.id.commentsList);
@@ -97,7 +115,14 @@ public class CommentsFragment extends Fragment {
             }
         });
 
-        addCommentBtn.setOnClickListener(v -> addComment(createCommentObject(v, addCommentEditText)));
+        addCommentBtn.setOnClickListener(v -> {
+            loadingDialog= new LoadingBar(getContext());
+            loadingDialog.startDialog();
+            addComment(createCommentObject(v, addCommentEditText));
+            if (score.id==0){
+                ratingDialog(getContext());
+            }
+        });
         return view;
     }
 
@@ -116,10 +141,12 @@ public class CommentsFragment extends Fragment {
             public void onResponse(Call<Comment> call, Response<Comment> response) {
                 Comment commentResponse= response.body();
                 commentAdapter.addComment(commentResponse);
+                loadingDialog.hideDialog();
             }
 
             @Override
             public void onFailure(Call<Comment> call, Throwable t) {
+                loadingDialog.hideDialog();
                 ErrorModal.createErrorDialog(getContext(),getString(R.string.genericErrorText));
             }
         });
@@ -130,7 +157,7 @@ public class CommentsFragment extends Fragment {
 
         SharedPreferences sharedPreferences=v.getContext().getSharedPreferences("session", Context.MODE_PRIVATE);
         int userId = sharedPreferences.getInt("id",-1);
-
+        comment.userName= sharedPreferences.getString("name","");
         comment.text=addCommentEditText.getText().toString();
         comment.createdDate=getDate();
         comment.place_id=currentPlace.id;
@@ -139,5 +166,28 @@ public class CommentsFragment extends Fragment {
         addCommentEditText.getText().clear();
         return comment;
     }
+
+    public void ratingDialog(Context context){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage("Deseas dejar una calificación?");
+        builder.setCancelable(true);
+
+        builder.setPositiveButton(
+                "Ir a calificar",
+                (dialog, id) -> {
+                    Intent intent = new Intent(context, RatePlaceActivity.class);
+                    intent.putExtra("score", score);
+                    intent.putExtra("place", currentPlace);
+                    context.startActivity(intent);
+                });
+
+        builder.setNegativeButton(
+                "En otro momento",
+                (dialog, id) -> dialog.cancel());
+
+        AlertDialog alert11 = builder.create();
+        alert11.show();
+    }
+
 
 }

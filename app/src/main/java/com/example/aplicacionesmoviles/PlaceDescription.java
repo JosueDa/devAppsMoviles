@@ -1,5 +1,6 @@
 package com.example.aplicacionesmoviles;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -45,7 +46,6 @@ public class PlaceDescription extends AppCompatActivity {
     private Place place;
     private Score score;
     private RatingBar ratingPlace;
-    private ScoreApi scoreApi;
     private VisitsApi visitsApi;
     private int userId, day, month, year;
 
@@ -63,7 +63,7 @@ public class PlaceDescription extends AppCompatActivity {
         SharedPreferences sharedPreferences= getSharedPreferences("session", Context.MODE_PRIVATE);
         userId = sharedPreferences.getInt("id",-1);
 
-        ViewPageAdapter viewPageAdapter = new ViewPageAdapter(getSupportFragmentManager(), getLifecycle());
+        ViewPageAdapter viewPageAdapter = new ViewPageAdapter(getSupportFragmentManager(), getLifecycle(),score);
 
         TabLayout tableLayout= binding.tabBar;
 
@@ -111,9 +111,7 @@ public class PlaceDescription extends AppCompatActivity {
 
 
         ratingPlace=binding.ratingBarF;
-        ratingPlace.setRating(score.score);
-
-        ratingPlace.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> createScore(rating));
+        ratingPlace.setRating(Float.parseFloat(place.score));
 
         calendarBtn.setOnClickListener(v -> onSetDateListener(lastVisited,placeDescriptionViewBinding.getContext()));
     }
@@ -123,7 +121,8 @@ public class PlaceDescription extends AppCompatActivity {
         placeNameTextView.setText(place.name);
 
         TextView placeCityTextView= binding.placeCity;
-        placeCityTextView.setText(place.city);
+        String city="Departamento: "+place.city;
+        placeCityTextView.setText(city);
 
         ImageView placeImage=binding.placeDetailImage;
         Glide.with(this).load(place.imageUrl).into(placeImage);
@@ -148,26 +147,6 @@ public class PlaceDescription extends AppCompatActivity {
         startActivity(mapIntent);
     }
 
-    public void createScore(float rating){
-        if (score.id==0){
-            score.place=place.id;
-            score.user=userId;
-        }
-        score.score=rating;
-        scoreApi= ApiClient.getInstanceRetrofit().create(ScoreApi.class);
-        Call<Score> scoreCall= scoreApi.createScore(score);
-        scoreCall.enqueue(new Callback<Score>() {
-            @Override
-            public void onResponse(Call<Score> call, Response<Score> response) {
-                Toast.makeText(PlaceDescription.this, "Valoramos tu opinión", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(Call<Score> call, Throwable t) {
-                ErrorModal.createErrorDialog(PlaceDescription.this,getString(R.string.genericErrorText));
-            }
-        });
-    }
 
     public void createVisit(Visit visit, TextView lastVisited, Context context){
         visitsApi= ApiClient.getInstanceRetrofit().create(VisitsApi.class);

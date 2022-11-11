@@ -27,6 +27,7 @@ import com.example.aplicacionesmoviles.mvp.view.IPlaceView;
 import com.example.aplicacionesmoviles.utils.ErrorModal;
 import com.example.aplicacionesmoviles.utils.LoadingBar;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,8 @@ public class PlaceDistanceFragment extends Fragment implements IPlaceView {
     RecyclerView placesRecyclerView;
     PlaceAdapter placesAdapter;
     IPlacePresenter presenter;
-    FloatingActionButton filter20km,filter10km,filter15km,filter5km;
+    FloatingActionButton filter100km,filter50km,filter20km,filter10km,filter5km;
+    FloatingActionsMenu actionsMenu;
     int userId;
     double latitude, longitude;
     private ScoreApi scoreApi;
@@ -142,16 +144,38 @@ public class PlaceDistanceFragment extends Fragment implements IPlaceView {
     }
 
     public void instanceButtons(View view){
+        actionsMenu=view.findViewById(R.id.menuFloating);
+        filter100km= view.findViewById(R.id.filter100km);
+        filter50km= view.findViewById(R.id.filter50km);
         filter20km= view.findViewById(R.id.filter20km);
-        filter15km= view.findViewById(R.id.filter15km);
         filter10km= view.findViewById(R.id.filter10km);
         filter5km= view.findViewById(R.id.filter5km);
     }
 
+    public void afterFilter(){
+        actionsMenu.collapse();
+        placesRecyclerView.scrollToPosition(0);
+    }
     public void filterButtons(){
-        filter5km.setOnClickListener(v -> placesAdapter.placeDistance(latitude,longitude,5));
-        filter10km.setOnClickListener(v -> placesAdapter.placeDistance(latitude,longitude,10));
-        filter15km.setOnClickListener(v -> placesAdapter.placeDistance(latitude,longitude,15));
-        filter20km.setOnClickListener(v -> placesAdapter.placeDistance(latitude,longitude,20));
+        filter5km.setOnClickListener(v -> {
+            placesAdapter.placeDistance(latitude,longitude,5);
+            afterFilter();
+        });
+        filter10km.setOnClickListener(v -> {
+            placesAdapter.placeDistance(latitude,longitude,10);
+            afterFilter();
+        });
+        filter20km.setOnClickListener(v -> {
+            placesAdapter.placeDistance(latitude,longitude,20);
+            afterFilter();
+        });
+        filter50km.setOnClickListener(v -> {
+            placesAdapter.placeDistance(latitude,longitude,50);
+            afterFilter();
+        });
+        filter100km.setOnClickListener(v -> {
+            placesAdapter.placeDistance(latitude,longitude,100);
+            afterFilter();
+        });
     }
 }

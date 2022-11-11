@@ -49,8 +49,9 @@ public class HomeActivity extends AppCompatActivity {
                     fragmentManager.beginTransaction().show(restaurantsFragment).commit();
                     fragmentManager.beginTransaction().hide(placesFragment).commit();
                     return true;
-                case R.id.logOutMenu:
-                    logOut();
+                case R.id.profileMenu:
+                    Intent profileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
+                    startActivity(profileIntent);
                     return true;
                 case R.id.FavMenuBtn:
                     Intent favIntent = new Intent(getApplicationContext(), FavActivity.class);
@@ -63,13 +64,6 @@ public class HomeActivity extends AppCompatActivity {
             }
             return false;
         });
-    }
-
-    public void logOut(){
-        SessionManagement sessionManagement= new SessionManagement(HomeActivity.this);
-        sessionManagement.removeSession();
-        Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(mainActivity);
     }
 
     boolean doubleBackToExitPressedOnce = false;

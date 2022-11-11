@@ -71,14 +71,4 @@
         android:layout_gravity="center"
         />
 
-    <TextView
-        android:id="@+id/forgotPasswordTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:text="@string/forgotPassword"
-        android:textColor="@color/purple_700"
-        />
-
 </LinearLayout>

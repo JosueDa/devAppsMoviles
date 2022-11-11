@@ -37,4 +37,6 @@
     <string name="loadingText">Cargando...</string>
     <string name="genericErrorText">Lo sentimos, hubo un error</string>
     <string name="emailErrorText">Correo o contraseña incorrecta</string>
+    <string name="exit_button">exit button</string>
+    <string name="err_password_confirmation">Error en la confirmación de contraseña</string>
 </resources>

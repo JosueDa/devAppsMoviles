@@ -3,13 +3,11 @@ package com.example.aplicacionesmoviles.utils;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 
 import androidx.appcompat.app.AlertDialog;
 
 public class ErrorModal {
 
-    private Double latitude;
     public static void createErrorDialog(Context context, String msg){
         AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
         builder1.setMessage(msg);
@@ -17,11 +15,7 @@ public class ErrorModal {
 
         builder1.setPositiveButton(
                 "Ok",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
+                (dialog, id) -> dialog.cancel());
 
         AlertDialog alert11 = builder1.create();
         alert11.show();
@@ -34,11 +28,9 @@ public class ErrorModal {
 
         builder1.setPositiveButton(
                 "Ok",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        activity.onBackPressed();
-                    }
+                (dialog, id) -> {
+                    dialog.cancel();
+                    activity.onBackPressed();
                 });
 
         AlertDialog alert11 = builder1.create();

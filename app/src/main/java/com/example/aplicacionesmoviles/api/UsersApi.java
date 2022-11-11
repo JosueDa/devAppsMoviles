@@ -18,5 +18,8 @@ public interface UsersApi {
     @POST("user")
     Call<User> createUser(@Body User user);
 
+    @POST("updateUser")
+    Call<User> updateUser(@Body User user);
+
 
 }

@@ -196,7 +196,8 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
         placeNameTextView.setText(place.name);
 
         TextView placeCityTextView= holder.mPlaceCity;
-        placeCityTextView.setText(place.city);
+        String city="Departamento: "+place.city;
+        placeCityTextView.setText(city);
 
         ImageView placeImage=holder.mPlaceImage;
         Glide.with(this.context).load(place.imageUrl).into(placeImage);

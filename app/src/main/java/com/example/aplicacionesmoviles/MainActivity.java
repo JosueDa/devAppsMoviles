@@ -21,7 +21,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     private UsersApi mUserApi;
-    LoadingBar loadingDialog;
+    private LoadingBar loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

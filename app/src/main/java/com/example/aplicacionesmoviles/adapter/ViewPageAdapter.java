@@ -8,19 +8,22 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.aplicacionesmoviles.fragments.CommentsFragment;
 import com.example.aplicacionesmoviles.fragments.PlaceDescriptionFragment;
+import com.example.aplicacionesmoviles.model.Score;
 
 
 public class ViewPageAdapter extends FragmentStateAdapter {
 
-    public ViewPageAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+    Score score;
+    public ViewPageAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle,Score score) {
         super(fragmentManager, lifecycle);
+        this.score=score;
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
         if (position==0) return new PlaceDescriptionFragment();
-        else return new CommentsFragment();
+        else return new CommentsFragment(score);
     }
 
     @Override

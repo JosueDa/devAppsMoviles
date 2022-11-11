@@ -26,6 +26,15 @@ public class SessionManagement {
         String lastname=user.lastName;
         editor.putString("lastname",lastname);
 
+        String phone=user.phone;
+        editor.putString("phone",phone);
+
+        String country=user.country;
+        editor.putString("country",country);
+
+        String pass=user.password;
+        editor.putString("pass",pass);
+
         int id=user.id;
         editor.putInt("id",id);
 
